@@ -1,0 +1,12 @@
+[Unit]
+Description=synchronize clipboard with primary selection using xclip
+
+[Service]
+ExecStart=/usr/bin/clipsync
+Restart=on-failure
+SystemCallArchitectures=native
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
