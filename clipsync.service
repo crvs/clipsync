@@ -2,7 +2,7 @@
 Description=synchronize clipboard with primary selection using xclip
 
 [Service]
-ExecStart=/usr/bin/clipsync
+ExecStart=$HOME/.local/bin/clipsync
 Restart=on-failure
 SystemCallArchitectures=native
 MemoryDenyWriteExecute=true
