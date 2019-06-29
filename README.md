@@ -18,8 +18,9 @@ The only thing that is running is the `clipsync.sh` script. This should be copie
 
 If you have systemd installed then you can enable clipsync as a user service after having installed it with `make install` by running.
 
-> systemctl --user enable clipsync.service
-> systemctl --user start clipsync.service
+> $ systemctl --user enable clipsync.service
+>
+> $ systemctl --user start clipsync.service
 
 **These instructions work on arch linux, I'm not sure how they would port to other distributions**
 
