@@ -1,11 +1,17 @@
+.PHONY: install clean
 
-.PHONY: install
+all: clipsync.service
 
-install : clipsync.sh clipsync.service.mk
+clipsync.service: clipsync.service.mk
+	sh clipsync.service.mk > clipsync.service
+
+install: clipsync.sh clipsync.service
 	chmod 755 clipsync.sh
 	cp clipsync.sh        ${HOME}/.local/bin
-	sh clipsync.service.mk > clipsync.service
 	cp clipsync.service   ${HOME}/.config/systemd/user
+
+clean:
+	@if [ -f clipsync.service ] ; then rm clipsync.service ; echo cleaned ; else echo nothing to do ; fi
 
 uninstall:
 	rm ${HOME}/.local/bin/clipsync.sh
