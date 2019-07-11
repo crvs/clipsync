@@ -4,6 +4,7 @@
 # depends on xclip
 # runs on POSIX shell
 
+
 function get_primary() {
 	xclip -o -selection primary 2> /dev/null || echo ''
 }
@@ -40,6 +41,7 @@ function update_clipbrd () {
 		echo "${CLIPBRD}" | xclip -selection primary
 	fi
 }
+
 
 while true ; do
 	sleep 1
