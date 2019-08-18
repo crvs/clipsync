@@ -6,11 +6,11 @@
 
 
 function get_primary() {
-	xclip -o -selection primary 2> /dev/null || echo ''
+	DISPLAY=$X xclip -o -selection primary 2> /dev/null || echo ''
 }
 
 function get_clipbrd() {
-	xclip -o -selection clipboard 2> /dev/null || echo ''
+	DISPLAY=$X xclip -o -selection clipboard 2> /dev/null || echo ''
 }
 
 CLIPBRD="$(get_clipbrd)"
@@ -18,10 +18,10 @@ CLIPBRD="$(get_clipbrd)"
 if [ "${CLIPBRD}" = "" ] ; then
 	PRIMARY="$(get_primary)"
 	CLIPBRD="${PRIMARY}"
-	echo "${PRIMARY}" | xclip -selection clipboard
+	echo "${PRIMARY}" | DISPLAY=:0 xclip -selection clipboard
 else
 	PRIMARY="${CLIPBRD}"
-	echo "${CLIPBRD}" | xclip -selection primary
+	echo "${CLIPBRD}" | DISPLAY=:0 xclip -selection primary
 fi
 
 function update_primary () {
@@ -29,7 +29,7 @@ function update_primary () {
 	PRIMARY="$(get_primary)"
 	if [ ! "${PRIMARY}" = "${OLD_PRIMARY}" ] ; then
 		CLIPBRD=${PRIMARY}
-		echo "${PRIMARY}" | xclip -selection clipboard
+		echo "${PRIMARY}" | DISPLAY=:0 xclip -selection clipboard
 	fi
 }
 
@@ -38,13 +38,14 @@ function update_clipbrd () {
 	CLIPBRD=$(get_clipbrd)
 	if [ ! "${CLIPBRD}" = "${OLD_CLIPBRD}" ] ; then
 		PRIMARY=${CLIPBRD}
-		echo "${CLIPBRD}" | xclip -selection primary
+		echo "${CLIPBRD}" | DISPLAY=:0 xclip -selection primary
 	fi
 }
 
-
+i=0
 while true ; do
 	sleep 1
+	export X=$(strings -a /proc/$(pgrep dwm)/environ | grep '^DISPLAY' | sed 's/DISPL            › AY=//')
 	update_clipbrd
 	update_primary
 done
