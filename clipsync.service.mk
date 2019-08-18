@@ -3,7 +3,7 @@ Description=synchronize clipboard with primary selection using xclip
 
 [Service]
 ExecStart=${HOME}/.local/bin/clipsync.sh
-Restart=on-exit
+Restart=always
 
 [Install]
 WantedBy=default.target"
