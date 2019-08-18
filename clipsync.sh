@@ -45,6 +45,6 @@ function update_clipbrd () {
 
 while true ; do
 	sleep 1
-	update_clipbrd
-	update_primary
+	update_clipbrd || exit 1
+	update_primary || exit 1
 done
