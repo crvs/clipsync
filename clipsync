@@ -1,7 +1,6 @@
-#!/bin/sh
+#! /bin/sh
 # file: clipsync.sh
 # keep the primary selection and the system clipboard synchronized
-
 
 get_primary() {
 	xclip -o -selection primary 2> /dev/null || echo ''
@@ -40,7 +39,6 @@ update_clipbrd () {
 	fi
 }
 
-i=0
 while true ; do
     if [ "$DISPLAY" = "" ]; then
         logger -s -t "[CLIPSYNC]" "No display set. Exiting clipsync."
