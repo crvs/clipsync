@@ -1,16 +1,14 @@
 #!/bin/sh
-# clipsync.sh
-# keeps the primary selection and the system clipboard synchronized
-# depends on xclip
-# runs on POSIX shell
+# file: clipsync.sh
+# keep the primary selection and the system clipboard synchronized
 
 
-function get_primary() {
-	DISPLAY=$X xclip -o -selection primary 2> /dev/null || echo ''
+get_primary() {
+	xclip -o -selection primary 2> /dev/null || echo ''
 }
 
-function get_clipbrd() {
-	DISPLAY=$X xclip -o -selection clipboard 2> /dev/null || echo ''
+get_clipbrd() {
+	xclip -o -selection clipboard 2> /dev/null || echo ''
 }
 
 CLIPBRD="$(get_clipbrd)"
@@ -18,34 +16,37 @@ CLIPBRD="$(get_clipbrd)"
 if [ "${CLIPBRD}" = "" ] ; then
 	PRIMARY="$(get_primary)"
 	CLIPBRD="${PRIMARY}"
-	echo "${PRIMARY}" | DISPLAY=:0 xclip -selection clipboard
+	echo "${PRIMARY}" | xclip -selection clipboard
 else
 	PRIMARY="${CLIPBRD}"
-	echo "${CLIPBRD}" | DISPLAY=:0 xclip -selection primary
+	echo "${CLIPBRD}" | xclip -selection primary
 fi
 
-function update_primary () {
+update_primary () {
 	OLD_primary=${primary}
 	PRIMARY="$(get_primary)"
 	if [ ! "${PRIMARY}" = "${OLD_PRIMARY}" ] ; then
 		CLIPBRD=${PRIMARY}
-		echo "${PRIMARY}" | DISPLAY=:0 xclip -selection clipboard
+		echo "${PRIMARY}" | xclip -selection clipboard
 	fi
 }
 
-function update_clipbrd () {
+update_clipbrd () {
 	OLD_CLIPBRD=${CLIPBRD}
 	CLIPBRD=$(get_clipbrd)
 	if [ ! "${CLIPBRD}" = "${OLD_CLIPBRD}" ] ; then
 		PRIMARY=${CLIPBRD}
-		echo "${CLIPBRD}" | DISPLAY=:0 xclip -selection primary
+		echo "${CLIPBRD}" | xclip -selection primary
 	fi
 }
 
 i=0
 while true ; do
+    if [ "$DISPLAY" = "" ]; then
+        logger -s -t "[CLIPSYNC]" "No display set. Exiting clipsync."
+        exit 1
+    fi
 	sleep 1
-	export X=$(strings -a /proc/$(pgrep dwm)/environ | grep '^DISPLAY' | sed 's/DISPL            › AY=//')
-	update_clipbrd || exit 1
-	update_primary || exit 1
+	update_clipbrd
+	update_primary
 done
